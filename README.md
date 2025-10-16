@@ -54,7 +54,7 @@ API RESTful para gerenciamento de **streamers, patrocinadores, propostas e admin
 - **Plataforms (enum)** – YOUTUBE, TWITCH, FACEBOOK, INSTAGRAM, TIKTOK, KICK.
 
 ---
-🔒 Segurança
+## 🔒 Segurança
 
 * Senhas armazenadas com bcrypt
 
@@ -62,7 +62,7 @@ API RESTful para gerenciamento de **streamers, patrocinadores, propostas e admin
 
 * API pronta para deploy serverless (Vercel, Railway, etc)
 
-📬 Contato
+## 📬 Contato
 
 Desenvolvido por Janine Veigas Farias e Miguel Rubim Vencato
 E-mail: janinefarias2005@gmail.com
