@@ -1,0 +1,86 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+
+model Streamer {
+  id             Int          @id @default(autoincrement())
+  idade          Int          @db.SmallInt
+  seguidores     Int          
+  foto           String
+  destaque        Boolean     @default(true)
+  plataforms    Plataforms    @default(YOUTUBE)
+  nome          String        @db.VarChar(30)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt()
+  admin          Admin?       @relation(fields: [adminId], references: [id])
+  adminId        String?      @db.VarChar(36)
+  Patrocinador Patrocinador[]
+  Proposta     Proposta[]
+  @@map("streamers")
+}
+
+model Patrocinador {
+  id             Int          @id @default(autoincrement())
+  nome           String       @db.VarChar(30)
+  idade          Int          @db.SmallInt
+  email          String       @unique
+  senha          String       @db.VarChar(60)
+  cidade         String       @db.VarChar(30)
+  streamer       Streamer?    @relation(fields: [streamerId], references: [id])
+  streamerId     Int?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt()
+  @@map("patrocinadores")
+  Proposta Proposta[]
+}
+ 
+model Admin {
+  id            String   @db.VarChar(36) @id @default(uuid())
+  nome          String   @db.VarChar(60)
+  email         String   @db.VarChar(40)
+  senha         String   @db.VarChar(60)   
+  nivel         Int      @db.SmallInt @default(2)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt  
+  Proposta Proposta[]
+  Streamer Streamer[]
+  @@map("admins")
+}
+
+model Proposta {
+  id             Int         @id @default(autoincrement())
+  titulo         String      @db.VarChar(30)
+  descricao      String      @db.Text
+  streamer       Streamer    @relation(fields: [streamerId], references: [id])
+  streamerId     Int
+  patrocinador   Patrocinador @relation(fields: [patrocinadorId], references: [id])
+  admin          Admin?       @relation(fields: [adminId], references: [id]) 
+  // Admin pode ver as propostas de todos os patrocinadores
+  adminId        String?      @db.VarChar(36)
+  patrocinadorId Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt()
+  resposta        String?     @db.VarChar(255)
+  @@map("propostas")
+}
+
+enum Plataforms {
+  YOUTUBE
+  TWITCH
+  FACEBOOK
+  INSTAGRAM
+  TIKTOK
+  KICK
+}
